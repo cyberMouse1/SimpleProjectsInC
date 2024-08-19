@@ -1,4 +1,4 @@
-# SimplePorjectsInC
+# SimpleProjectsInC
 
 ## Hello reader!
 

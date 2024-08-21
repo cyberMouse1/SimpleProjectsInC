@@ -29,7 +29,7 @@ int main() {
 float checkSize(char file_name[]) {
     FILE* file = fopen(file_name, "r");
     float bytes;
-    float kiloBytes;
+    float kilo_bytes;
 
     fseek(file, 0L, SEEK_END);
     bytes = ftell(file);
@@ -37,5 +37,5 @@ float checkSize(char file_name[]) {
 
     kiloBytes = bytes / 1024;
     
-    return kiloBytes;
+    return kilo_bytes;
 }

@@ -16,8 +16,8 @@ Entity player;
 Entity enemies[10];
 Entity bullets[10];
 
-int enemyCount = 10;
-int bulletCount = 10;
+int enemy_count = 10;
+int bullet_count = 10;
 
 void UpdatePlayer() {
     if (IsKeyDown(KEY_W)) {
@@ -39,36 +39,36 @@ void UpdatePlayer() {
 }
 
 void UpdateBullets() {
-    for (int i = 0; i < bulletCount; i++) {
+    for (int i = 0; i < bullet_count; i++) {
         bullets[i].position.x += BULLET_SPEED;
 
         if (bullets[i].position.x > SCREEN_WIDTH) {
-            for (int j = i; j < bulletCount - 1; j++) {
+            for (int j = i; j < bullet_count - 1; j++) {
                 bullets[j] = bullets[j + 1];
             }
-            bulletCount--;
+            bullet_count--;
             i--;
         }
     }
 }
 
 void CheckCollisions() {
-    for (int j = 0; j < bulletCount; j++) {
-        Rectangle bulletRect = { bullets[j].position.x, bullets[j].position.y, 10, 10 };
-        for (int i = 0; i < enemyCount; i++) {
-            Rectangle enemyRect = { enemies[i].position.x, enemies[i].position.y, 10, 10 };
-            if (CheckCollisionRecs(bulletRect, enemyRect)) {
-                for (int k = i; k < enemyCount - 1; k++) {
+    for (int j = 0; j < bullet_count; j++) {
+        Rectangle bullet_rect = { bullets[j].position.x, bullets[j].position.y, 10, 10 };
+        for (int i = 0; i < enemy_count; i++) {
+            Rectangle enemy_rect = { enemies[i].position.x, enemies[i].position.y, 10, 10 };
+            if (CheckCollisionRecs(bullet_rect, enemy_rect)) {
+                for (int k = i; k < enemy_count - 1; k++) {
                     enemies[k] = enemies[k + 1];
                 }
-                enemyCount--;
+                enemy_count--;
 
-                for (int k = j; k < bulletCount - 1; k++) {
+                for (int k = j; k < bullet_count - 1; k++) {
                     bullets[k] = bullets[k + 1];
                 }
-                bulletCount--;
+                bullet_count--;
 
-                printf("Data:\nEnemy:%d\nBullet: %d\n", enemyCount, bulletCount);
+                printf("Data:\nEnemy:%d\nBullet: %d\n", enemy_count, bullet_count);
                 break;
             }
         }
@@ -80,7 +80,7 @@ int main() {
 
     player.position = (Vector2){ 50, SCREEN_HEIGHT/2 };
     player.velocity = (Vector2){ 0, 90 };
-    printf("Data:\nEnemy:%d\nBullet: %d\n", enemyCount, bulletCount);
+    printf("Data:\nEnemy:%d\nBullet: %d\n", enemy_count, bullet_count);
 
     for (int i = 0; i < 10; i++) {
         enemies[i].position.x = SCREEN_WIDTH/2 + 350;
@@ -94,10 +94,10 @@ int main() {
         UpdatePlayer();
         UpdateBullets();
         CheckCollisions();
-        if (IsKeyPressed(KEY_SPACE) && bulletCount <= 10) {
-            bullets[bulletCount].position = (Vector2){ player.position.x, player.position.y + 25};
-            bullets[bulletCount].velocity = (Vector2){ 0, -BULLET_SPEED };
-            bulletCount++;
+        if (IsKeyPressed(KEY_SPACE) && bullet_count <= 10) {
+            bullets[bullet_count].position = (Vector2){ player.position.x, player.position.y + 25};
+            bullets[bullet_count].velocity = (Vector2){ 0, -BULLET_SPEED };
+            bullet_count++;
         }
 
         BeginDrawing();
@@ -112,15 +112,15 @@ int main() {
                 }
             }
 
-            for (int i = 0; i < enemyCount; i++) {
+            for (int i = 0; i < enemy_count; i++) {
                 DrawCircle(enemies[i].position.x, enemies[i].position.y, 10, RED);
             }
 
-            for (int i = 0; i < bulletCount; i++) {
+            for (int i = 0; i < bullet_count; i++) {
                 DrawCircle(bullets[i].position.x, bullets[i].position.y, 10, WHITE);
             }
 
-            printf("Data:\nEnemy:%d\nBullet: %d\n", enemyCount, bulletCount);
+            printf("Data:\nEnemy:%d\nBullet: %d\n", enemy_count, bullet_count);
 
         EndDrawing();
     }

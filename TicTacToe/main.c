@@ -15,8 +15,8 @@ typedef struct {
 } Move;
 
 Move moves[9];
-int moveCount = 0;
-int currentPlayer = CROSS;
+int move_count = 0;
+int current_player = CROSS;
 
 int board[3][3];
 
@@ -47,7 +47,7 @@ void drawMove(int type, int x, int y) {
 }
 
 void drawMoves() {
-    for (int i = 0; i < moveCount; i++) {
+    for (int i = 0; i < move_count; i++) {
         Move move = moves[i];
         drawMove(move.type, move.x, move.y);
     }
@@ -114,19 +114,19 @@ int main() {
             int x = GetMouseX();
             int y = GetMouseY();
 
-            int cellX = (x - 80) / 80;
-            int cellY = (y - 80 - HUD_GAP) / 80;
+            int cell_x = (x - 80) / 80;
+            int cell_y = (y - 80 - HUD_GAP) / 80;
 
-            if (cellX >= 0 && cellX < 3 && cellY >= 0 && cellY < 3 && board[cellX][cellY] == EMPTY) {
-                board[cellX][cellY] = currentPlayer;
+            if (cell_x >= 0 && cell_x < 3 && cell_y >= 0 && cell_y < 3 && board[cell_x][cell_y] == EMPTY) {
+                board[cellX][cellY] = current_player;
                 Move move;
-                move.type = currentPlayer;
+                move.type = current_player;
                 move.x = 80 + cellX * 80 + 40;
                 move.y = 80 + cellY * 80 + 40 + HUD_GAP;
-                moves[moveCount] = move;
-                moveCount++;
+                moves[move_count] = move;
+                move_count++;
 
-                currentPlayer = (currentPlayer == CROSS) ? CIRCLE : CROSS;
+                current_player = (current_player == CROSS) ? CIRCLE : CROSS;
             }
         }
 
@@ -136,8 +136,8 @@ int main() {
                     board[x][y] = EMPTY;
                 }
             }
-            moveCount = 0;
-            currentPlayer = CROSS;
+            move_count = 0;
+            current_player = CROSS;
             EnableCursor();
         }
 

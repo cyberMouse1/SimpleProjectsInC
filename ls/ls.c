@@ -7,22 +7,32 @@
 
 float checkSize(char file_name[]);
 
-int main() {
-    DIR *d = opendir(".");
-    struct dirent *dir;
+int main(int argc, char *argv[]) {
+    DIR *dir;
+    struct dirent *dent;
+    const char *name = ".";
 
-    if(d == NULL) {
-        perror("opendir");
+    if(argc > 1)
+        name = argv[1];
+
+    dir = opendir(name);
+
+    if(!dir)
+    {
+        perror(name);
         return 1;
     }
 
     printf("File Name     File Exstention     File Size\n");
-    while((dir = readdir(d)) != NULL) {
-        printf("%-19s %-16s %-16.2f KB\n", dir->d_name, strrchr(dir->d_name, '.'), checkSize(dir->d_name));
+    while((dent = readdir(dir)) != NULL) {
+        const char *file_extension = strrchr(dent->d_name, '.');
+        if (file_extension == NULL) {
+            file_extension = "DIR";
+        }
+        printf("%-19s %-16s %-16.2f KB\n", dent->d_name, file_extension, checkSize(dent->d_name));
     }
 
-    closedir(d);
-    system("pause");
+    closedir(dir);
     return 0;
 }
 
@@ -35,7 +45,7 @@ float checkSize(char file_name[]) {
     bytes = ftell(file);
     fclose(file);
 
-    kiloBytes = bytes / 1024;
+    kilo_bytes = bytes / 1024;
     
     return kilo_bytes;
 }

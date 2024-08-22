@@ -9,7 +9,6 @@ int main(int argc, char* argv[]) {
     //     printf("Usage: %s filename\n", argv[0]); 
     //     return 1; 
     // }
-    printf("%d", argc);
     read_file(argv[1]); 
 
     system("pause");

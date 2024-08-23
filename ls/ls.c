@@ -7,7 +7,7 @@
 
 static char *get_file_extension(const char *filename);
 static float get_size_file(char filename[]);
-static char is_directory(const char *path);
+static int is_directory(const char *path);
 static void print_ls(int argument_count, char *argument_value[]);
 
 int main(int argc, char *argv[])
@@ -43,7 +43,7 @@ static float get_size_file(char filename[])
     return bytes / 1024;
 }
 
-static char is_directory(const char *path)
+static int is_directory(const char *path)
 {
     struct stat stats;
     stat(path, &stats);

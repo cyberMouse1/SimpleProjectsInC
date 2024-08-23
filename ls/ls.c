@@ -5,47 +5,76 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-float checkSize(char file_name[]);
+static char *get_file_extension(const char *filename);
+static float get_size_file(char filename[]);
+static char is_directory(const char *path);
+static void print_ls(int argument_count, char *argument_value[]);
 
-int main(int argc, char *argv[]) {
-    DIR *dir;
-    struct dirent *dent;
-    const char *name = ".";
+int main(int argc, char *argv[])
+{
+    print_ls(argc, argv);
 
-    if(argc > 1)
-        name = argv[1];
-
-    dir = opendir(name);
-
-    if(!dir)
-    {
-        perror(name);
-        return 1;
-    }
-
-    printf("File Name     File Exstention     File Size\n");
-    while((dent = readdir(dir)) != NULL) {
-        const char *file_extension = strrchr(dent->d_name, '.');
-        if (file_extension == NULL) {
-            file_extension = "DIR";
-        }
-        printf("%-19s %-16s %-16.2f KB\n", dent->d_name, file_extension, checkSize(dent->d_name));
-    }
-
-    closedir(dir);
     return 0;
 }
 
-float checkSize(char file_name[]) {
-    FILE* file = fopen(file_name, "r");
+static char *get_file_extension(const char *filename)
+{
+    char *last_dot = strrchr(filename, '.');
+    if (last_dot != NULL) {
+        return last_dot + 1;
+    } else {
+        return "Not found";
+    }
+}
+
+static float get_size_file(char filename[])
+{
+    FILE* file = fopen(filename, "r");
     float bytes;
-    float kilo_bytes;
+
+    if(file == NULL) {
+        return 0.00;
+    }
 
     fseek(file, 0L, SEEK_END);
     bytes = ftell(file);
     fclose(file);
-
-    kilo_bytes = bytes / 1024;
     
-    return kilo_bytes;
+    return bytes / 1024;
+}
+
+static char is_directory(const char *path)
+{
+    struct stat stats;
+    stat(path, &stats);
+
+    if(S_ISDIR(stats.st_mode))
+        return 0;
+    
+    return 1;
+}
+
+static void print_ls(int argument_count, char *argument_value[])
+{
+    DIR *dir;
+    struct dirent *dent;
+    const char *name = ".";
+
+    dir = opendir(name);
+
+    if(!dir)
+        perror(name);
+
+    if(argument_count > 1)
+        name = argument_value[1];
+
+    printf("File Name     File Exstention     File Size\n");
+    while((dent = readdir(dir)) != NULL) {
+        if(is_directory(dent->d_name) == 0)
+            printf("%-18s %-15s\n", dent->d_name, "DIR");
+        else
+            printf("%-18s %-15s %.2f KB\n", dent->d_name, get_file_extension(dent->d_name), get_size_file(dent->d_name));
+    }
+
+    closedir(dir);
 }
